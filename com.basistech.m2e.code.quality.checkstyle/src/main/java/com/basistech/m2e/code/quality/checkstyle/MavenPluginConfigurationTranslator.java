@@ -113,6 +113,21 @@ public class MavenPluginConfigurationTranslator {
         return headerFile.getAbsolutePath();
     }
 
+    public String getSuppressionsFile()
+        throws CheckstylePluginException, CoreException {
+        final URL suppressionsResource = this.resourceResolver.resolveLocation(
+            getSuppressionsLocation());
+        if (suppressionsResource == null) {
+            return null;
+        }
+    	
+        String outDir = mavenProject.getBuild().getDirectory();
+        File suppressionsFile = new File(outDir, "checkstyle-suppressions.xml");
+        copyOut(suppressionsResource, suppressionsFile);
+
+        return suppressionsFile.getAbsolutePath();
+    }
+
     public void updateCheckConfigWithIncludeExcludePatterns(
             final ProjectConfigurationWorkingCopy pcWorkingCopy, final ICheckConfiguration checkCfg)
         throws CheckstylePluginException, CoreException {
@@ -189,6 +204,12 @@ public class MavenPluginConfigurationTranslator {
             headerLocation = "config/maven-header.txt";
         }
         return headerLocation;
+    }
+
+    private String getSuppressionsLocation() throws CoreException {
+        String suppressionsLocation = configurator.getParameterValue("suppressionsLocation",
+                String.class, session, execution);
+        return suppressionsLocation;
     }
 
     private List<String> getIncludes() throws CoreException {
