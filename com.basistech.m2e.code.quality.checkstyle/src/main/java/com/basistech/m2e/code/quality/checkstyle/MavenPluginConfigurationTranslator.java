@@ -115,8 +115,9 @@ public class MavenPluginConfigurationTranslator {
 
     public String getSuppressionsFile()
         throws CheckstylePluginException, CoreException {
-        final URL suppressionsResource = this.resourceResolver.resolveLocation(
-            getSuppressionsLocation());
+        final String suppressionsLocation = getSuppressionsLocation();
+        final URL suppressionsResource = suppressionsLocation != null ?
+                this.resourceResolver.resolveLocation(suppressionsLocation) : null;
         if (suppressionsResource == null) {
             return null;
         }
