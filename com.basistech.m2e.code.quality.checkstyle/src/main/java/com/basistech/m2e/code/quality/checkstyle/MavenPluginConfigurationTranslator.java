@@ -106,11 +106,7 @@ public class MavenPluginConfigurationTranslator {
             return null;
         }
 
-        String outDir = mavenProject.getBuild().getDirectory();
-        File headerFile = new File(outDir, "checkstyle-header.txt");
-        copyOut(headerResource, headerFile);
-
-        return headerFile.getAbsolutePath();
+        return headerResource.toString();
     }
 
     public String getSuppressionsFile()
@@ -121,12 +117,8 @@ public class MavenPluginConfigurationTranslator {
         if (suppressionsResource == null) {
             return null;
         }
-    	
-        String outDir = mavenProject.getBuild().getDirectory();
-        File suppressionsFile = new File(outDir, "checkstyle-suppressions.xml");
-        copyOut(suppressionsResource, suppressionsFile);
 
-        return suppressionsFile.getAbsolutePath();
+        return suppressionsResource.toString();
     }
 
     public void updateCheckConfigWithIncludeExcludePatterns(
@@ -219,15 +211,6 @@ public class MavenPluginConfigurationTranslator {
 
     private List<String> getExcludes() throws CoreException {
         return this.getPatterns("excludes");
-    }
-
-    private void copyOut(URL src, File dest) throws CheckstylePluginException {
-        try {
-            FileUtils.copyURLToFile(src, dest);
-        } catch (IOException e) {
-            throw new CheckstylePluginException(
-              "Failed to resolve header file from configHeader, SKIPPING Eclipse checkstyle configuration");
-        }
     }
 
     /**
